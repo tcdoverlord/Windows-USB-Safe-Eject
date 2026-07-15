@@ -1,21 +1,40 @@
-MIT License
+# TCDOVERLORD Personal Learning License (TPLL) v1.0
 
 Copyright (c) 2026 TCDOVERLORD
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+All rights reserved.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## Permission Granted
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Permission is granted to any individual to:
+
+* View and study this project's source code.
+* Download and use this software for personal, educational, research, or non-commercial purposes.
+* Learn from, modify, and experiment with the code for private use.
+
+## Restrictions
+
+Without prior written permission from the copyright owner, you may NOT:
+
+* Sell this software.
+* Include this software in any commercial product or service.
+* Redistribute modified versions for commercial purposes.
+* Use this software within a commercial organization for profit.
+* Repackage this software for resale.
+* Remove or alter this license or copyright notice.
+
+## Commercial Licensing
+
+Commercial use, redistribution, business integration, SaaS offerings, consulting use, or inclusion in commercial products requires written permission from the copyright owner.
+
+To discuss commercial licensing, contact:
+
+**TCDOVERLORD**
+
+GitHub: https://github.com/tcdoverlord
+
+## Disclaimer
+
+This software is provided "as is", without warranty of any kind, express or implied. The author shall not be liable for any damages arising from the use of this software.
+
+By using this software, you agree to the terms of this license.

@@ -236,18 +236,32 @@ Do not post logs publicly without reviewing them for private filenames or folder
 - Added dated activity logging.
 
 ## License
+## License
 
-This project is licensed under the MIT License.
+This project is licensed under the **TCDOVERLORD Personal Learning License (TPLL) v1.0**.
 
-See [LICENSE](LICENSE) for the complete license text.
+This software is provided for:
+
+* 📚 Personal learning
+* 🎓 Educational use
+* 🧪 Research and experimentation
+* 💻 Non-commercial projects
+
+Commercial use, redistribution, business integration, resale, or inclusion in commercial products is **not permitted** without prior written permission from the copyright owner.
+
+If you are interested in licensing this software for commercial use, please contact **TCDOVERLORD** before using it in a business, product, or service.
+
+See the [LICENSE](LICENSE) file for the complete license terms.
+
+---
 
 ## Author
 
 **TCDOVERLORD**
 
-GitHub: [tcdoverlord](https://github.com/tcdoverlord)
+GitHub: https://github.com/tcdoverlord
 
-Building practical Windows utilities, automation tools, diagnostic scripts, and open-source projects.
+Building practical Windows utilities, automation tools, diagnostic scripts, and open-source learning projects.
 
 ## Support
 

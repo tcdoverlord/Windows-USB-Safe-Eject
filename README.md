@@ -35,17 +35,6 @@ Before requesting removal, the utility verifies that the drive is no longer lock
 - Stops the eject process when active locks remain.
 
 ## Screenshots
-
-Screenshots can be added to the `images/` folder using these filenames:
-
-```text
-images/drive-selection.png
-images/locking-processes.png
-images/safe-eject-success.png
-```
-
-Suggested README image layout:
-
 ![Drive Selection](images/drive-selection.png)
 
 ![Locking Processes](images/locking-processes.png)
@@ -281,11 +270,7 @@ Before sharing a log, remove any private filenames, usernames, or folder paths.
 
 ## ⭐ Star History
 
-## Star History
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=date&legend=top-left&sealed_token=P_0rL1qsmGv_z8Qb1lfClMBwG5jVHVzBTLlhDiC0bDf3chdu-5YPkqJzC_SrLYYZYUW-l1kNu7mlwm9Mvde6j2awVCG8nNQevW_pdEwb7cvpbD8Ij3a5ryAxboPQMxzuGu-M02bnA3mS3Wpri2POmg6YUrupc7f1RJtGRzNPtcSeqPyPyuSoL1xM3HF5)](https://www.star-history.com/?type=date&repos=tcdoverlord%2FSafeUSB-Eject-Windows11)
+[![Star History Chart](https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=date&legend=top-left&sealed_token=aZbeTd8gbGJ0tpbh8BqBXSrBleGhFzo9BJ3z1JbxBgkz8MrkSdnG_mzyq0nM2I9g8Jy7cjjKv2DvLYhDL1ryw3wpDAZGczhWhTN9ZxBfRAtU9a0brOuTgqWoslMhvNdrECaZbMvy5VdCypTeciiqm6Y57fTc2qksZB_muuRTd4_mZ--mFBZj8-wFn3RD)](https://www.star-history.com/?repos=tcdoverlord%2FSafeUSB-Eject-Windows11&type=date&legend=top-left)
 
 ## Golden Rule
 

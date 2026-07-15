@@ -281,7 +281,15 @@ Before sharing a log, remove any private filenames, usernames, or folder paths.
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=Date)](https://star-history.com/#tcdoverlord/SafeUSB-Eject-Windows11&Date)
+## Star History
+
+<a href="https://www.star-history.com/?type=date&repos=tcdoverlord%2FSafeUSB-Eject-Windows11">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=date&theme=dark&legend=top-left&sealed_token=UrCQtq6vm6u1RzM99yvo9SZB4MRr2TqJA2nRLtRB7DfTSVOvibOmJRcf7KrIEzNj_SqxVzmmtyypN_FYcfBxMUg-p6T9XruQBVkznM5SdzUZEGPt5soYooXbbG6wJLlhvIUFiChtwFzR4EpVGgipiU1u36iBMrGhmwRV69fkMWZwfZdvd2u2F5lzyYlS" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=date&legend=top-left&sealed_token=UrCQtq6vm6u1RzM99yvo9SZB4MRr2TqJA2nRLtRB7DfTSVOvibOmJRcf7KrIEzNj_SqxVzmmtyypN_FYcfBxMUg-p6T9XruQBVkznM5SdzUZEGPt5soYooXbbG6wJLlhvIUFiChtwFzR4EpVGgipiU1u36iBMrGhmwRV69fkMWZwfZdvd2u2F5lzyYlS" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11&type=date&legend=top-left&sealed_token=UrCQtq6vm6u1RzM99yvo9SZB4MRr2TqJA2nRLtRB7DfTSVOvibOmJRcf7KrIEzNj_SqxVzmmtyypN_FYcfBxMUg-p6T9XruQBVkznM5SdzUZEGPt5soYooXbbG6wJLlhvIUFiChtwFzR4EpVGgipiU1u36iBMrGhmwRV69fkMWZwfZdvd2u2F5lzyYlS" />
+ </picture>
+</a>
 
 ## Golden Rule
 

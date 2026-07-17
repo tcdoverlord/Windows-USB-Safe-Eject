@@ -2,39 +2,99 @@
 
 Copyright (c) 2026 TCDOVERLORD
 
-All rights reserved.
+All Rights Reserved.
 
-## Permission Granted
+-------------------------------------------------------------------------------
+PURPOSE
+-------------------------------------------------------------------------------
 
-Permission is granted to any individual to:
+The TCDOVERLORD Personal Learning License (TPLL) is designed to encourage
+learning, education, and technical growth while protecting the author's work
+from unauthorized commercial use.
 
-* View and study this project's source code.
-* Download and use this software for personal, educational, research, or non-commercial purposes.
-* Learn from, modify, and experiment with the code for private use.
+This license allows individuals to study how the software works, learn from
+the source code, and experiment privately, while reserving all commercial
+rights to the copyright owner.
 
-## Restrictions
+-------------------------------------------------------------------------------
+PERMITTED USES
+-------------------------------------------------------------------------------
+
+You may:
+
+• View and study the source code.
+• Download and run the software.
+• Modify the software for your own personal use.
+• Experiment with the code for educational purposes.
+• Use the software for research or academic projects.
+• Share links to the official GitHub repository.
+• Create private forks for learning purposes.
+
+-------------------------------------------------------------------------------
+RESTRICTIONS
+-------------------------------------------------------------------------------
 
 Without prior written permission from the copyright owner, you may NOT:
 
-* Sell this software.
-* Include this software in any commercial product or service.
-* Redistribute modified versions for commercial purposes.
-* Use this software within a commercial organization for profit.
-* Repackage this software for resale.
-* Remove or alter this license or copyright notice.
+• Sell this software.
+• Sell modified versions of this software.
+• Redistribute this software for commercial purposes.
+• Include this software in any commercial application.
+• Bundle this software with products or services for sale.
+• Use this software within a commercial business for profit.
+• Offer this software as a hosted service (SaaS).
+• Remove or modify this license.
+• Remove copyright notices.
+• Misrepresent yourself as the original author.
 
-## Commercial Licensing
+-------------------------------------------------------------------------------
+COMMERCIAL LICENSING
+-------------------------------------------------------------------------------
 
-Commercial use, redistribution, business integration, SaaS offerings, consulting use, or inclusion in commercial products requires written permission from the copyright owner.
+Commercial licensing is available separately.
 
-To discuss commercial licensing, contact:
+Commercial use includes, but is not limited to:
 
-**TCDOVERLORD**
+• Business use
+• Corporate deployment
+• Commercial consulting
+• SaaS offerings
+• Paid software bundles
+• Commercial redistribution
+• Enterprise integration
 
-GitHub: https://github.com/tcdoverlord
+To discuss commercial licensing, please contact:
 
-## Disclaimer
+TCDOVERLORD
 
-This software is provided "as is", without warranty of any kind, express or implied. The author shall not be liable for any damages arising from the use of this software.
+GitHub:
+https://github.com/tcdoverlord
 
-By using this software, you agree to the terms of this license.
+-------------------------------------------------------------------------------
+OWNERSHIP
+-------------------------------------------------------------------------------
+
+This license does not transfer ownership of the software.
+
+All copyrights, trademarks, branding, documentation, images, scripts,
+graphics, logos, and associated intellectual property remain the exclusive
+property of TCDOVERLORD unless otherwise stated.
+
+-------------------------------------------------------------------------------
+DISCLAIMER
+-------------------------------------------------------------------------------
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR ANY CLAIM, DAMAGES,
+LIABILITY, OR OTHER LOSS ARISING FROM THE USE OF THIS SOFTWARE.
+
+-------------------------------------------------------------------------------
+ACCEPTANCE
+-------------------------------------------------------------------------------
+
+By downloading, copying, running, modifying, or otherwise using this software,
+you acknowledge that you have read, understood, and agree to the terms of the
+TCDOVERLORD Personal Learning License (TPLL).

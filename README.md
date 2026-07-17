@@ -224,25 +224,28 @@ Do not post logs publicly without reviewing them for private filenames or folder
 - Added volume dismount and Windows eject requests.
 - Added dated activity logging.
 
-## License
-## License
+# License
 
 This project is licensed under the **TCDOVERLORD Personal Learning License (TPLL) v1.0**.
 
-This software is provided for:
+This project is intended to support:
 
-* 📚 Personal learning
-* 🎓 Educational use
-* 🧪 Research and experimentation
-* 💻 Non-commercial projects
+- 📚 Personal learning
+- 🎓 Educational use
+- 🧪 Research and experimentation
+- 💻 Private, non-commercial projects
 
-Commercial use, redistribution, business integration, resale, or inclusion in commercial products is **not permitted** without prior written permission from the copyright owner.
+You are welcome to study, modify, and experiment with the source code for your own personal or educational purposes.
 
-If you are interested in licensing this software for commercial use, please contact **TCDOVERLORD** before using it in a business, product, or service.
+Commercial use—including resale, redistribution, business integration, SaaS offerings, consulting use, enterprise deployment, or inclusion in commercial products—is **not permitted** without prior written permission from the copyright owner.
+
+For commercial licensing inquiries, please contact:
+
+**TCDOVERLORD**
+
+GitHub: https://github.com/tcdoverlord
 
 See the [LICENSE](LICENSE) file for the complete license terms.
-
----
 
 ## Author
 

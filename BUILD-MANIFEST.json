@@ -1,0 +1,70 @@
+{
+  "project": "Safe USB Eject by TCDOVERLORD",
+  "stable_engine": "v1.0.0 preserved from original repository archive",
+  "rust_ui_preview": "0.2.6",
+  "status": "source only; not compiled or hardware-tested here",
+  "files": [
+    {
+      "path": "README-RUST-MIGRATION.md",
+      "sha256": "44797b202a38fc4136d6d2d4d04a9616b871d34cfb78fb676c5ac7aa27155810"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "559bfb78920e93c68f299b1649b11bd87eb07b1bf30005a799a24252accd1c5e"
+    },
+    {
+      "path": "PROJECT_CONTINUITY.md",
+      "sha256": "21a5388fdf689d15771bc903c579b207cca855ba3f3a4736ce23ce61ae53e0ea"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "f2b7704e18978f93f31fa27e35b85990afb9c3c352df963ad5065c7d4db7cfcb"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3b88816cefc60dd53bdc6333038ee1e1f4467da3f72e14d097127865ef55ad60"
+    },
+    {
+      "path": "SAFE_USB_EJECT.bat",
+      "sha256": "c6df1468034eae643a5945535a0675184a45ef268e2c3a8fc806c029d1e118e4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "159b83735a553b0077ea224d4632f9eea54272b75751c43f2f9f8c09080ae2fa"
+    },
+    {
+      "path": "BUILD-EXE.bat",
+      "sha256": "0c223bdaebb8dabdf6f02387c59aa7bad437090a887358bcd777d6180a047ed8"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "2dc53cab7a4ee76621c63eea608cef248ea697e84d9ca64aec23ce20786c3e31"
+    },
+    {
+      "path": "TEST-CHECKLIST.md",
+      "sha256": "a340863d3220dc838d618ae2e99517dcbd3d976f67446f13d36557e2a2c627f5"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "be3c6d2c6c406a64d44f0b6464a887e290416dd90c524094485b1be00936d6d7"
+    },
+    {
+      "path": "docs/SAFETY.md",
+      "sha256": "035f94d1c032dc41139eb82c51e1a908b97942a14a2690617a0d5da9f0e7ec9d"
+    },
+    {
+      "path": "legacy/Safe-USB-Eject-v1.0.0.ps1",
+      "sha256": "2313aed00014fab1aab0521ded953524cb91fa7e0ef4686dc56852b4d272b962"
+    },
+    {
+      "path": "src/main.rs",
+      "sha256": "c21f601e023b2cd142078471d5f4ee821e53d9a2c1c90623ffe16c710dd56b6a"
+    },
+    {
+      "path": "scripts/Safe-USB-Eject.ps1",
+      "sha256": "344fb08e7e45e9b7d44bc5dd47f46c99dddbffb98cb2174cb61bb3bc0129e109"
+    }
+  ],
+  "version": "0.2.6",
+  "notes": "Adds a prominent red NOT READY state and green SCRIPT SUCCESSFULLY COMPLETED state. Windows build and hardware testing required."
+}

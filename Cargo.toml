@@ -1,0 +1,12 @@
+[package]
+name = "safe-usb-eject"
+version = "0.2.0"
+edition = "2021"
+description = "Safety-first removable USB eject utility by TCDOVERLORD"
+authors = ["TCDOVERLORD"]
+license = "MIT"
+
+[dependencies]
+eframe = { version = "0.31", default-features = false, features = ["default_fonts", "glow", "wayland", "x11"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

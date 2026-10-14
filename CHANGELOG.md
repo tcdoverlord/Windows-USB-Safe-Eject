@@ -1,56 +1,45 @@
 # Changelog
 
-All notable changes to this project should be documented in this file.
+## 0.2.0 — Rust UI preview (unreleased)
+- Replaced the unstable PowerShell GUI with an egui Rust desktop UI.
+- Moved drive enumeration into background workers with three-second refresh.
+- Runs the preserved safety engine without showing a console window.
+- Added a GUI protocol for confirmation and optional force-close prompts.
+- Preserved the stable v1.0.0 PowerShell engine under `legacy/`.
+- Not compiled or hardware-tested in the current environment.
 
-The project owner controls version numbers, releases, tags, and milestones.
+## 0.2.1 — compile fix
+- Fixed a Rust type mismatch in the no-exit-code status branch by converting the string literal to `String`.
 
-## [v1.0.0] - 2026-07-17
+## 0.2.2
+- Prevents the UI from trapping the user indefinitely if the safety helper stops responding.
+- Adds an explicit close-anyway path with an unverified-ejection warning; pending safety prompts are answered with cancellation.
+- Normal Exit remains unavailable during an active ejection.
 
-### Added
+## 0.2.3 — honor close request after ejection
+- If the user requests window closure while ejection is running, show the existing safety warning and remember that request.
+- If the helper finishes while the warning is still pending, close the UI automatically instead of leaving it open after completion.
+- Choosing “Keep Waiting” clears the pending close request; choosing “Close UI Anyway…” remains an explicit close path.
+- Normal completion still refreshes the drive list when no close request is pending.
+- Source update only; Windows compilation and physical USB testing are still required.
 
-- Windows batch launcher: `SAFE_USB_EJECT.bat`
-- PowerShell engine: `scripts/Safe-USB-Eject.ps1`
-- Removable USB drive detection
-- Restart Manager lock detection
-- Graceful application-close workflow
-- Optional force-close workflow with explicit approval
-- Protected-process safeguards
-- Lock rechecking before eject
-- Volume dismount request
-- Windows Shell eject request
-- Dated activity logging
-- Explicit eject confirmation requiring `EJECT`
-- Safety documentation
-- Installation and usage instructions
-- Repository images and project artwork
-- License and GitHub-ready README
-- Project continuity documentation
-- Angel project identity file
-- Repository version dashboard
+## 0.2.4
+- After the safety engine returns exit code 0, display “Eject completed successfully. Exiting app…” and automatically close after two seconds.
+- Disable further eject attempts after a successful operation and skip post-success drive scans, avoiding a second eject attempt in this build.
+- Nonzero or unknown exit codes remain unverified and do not trigger the success auto-close.
 
-### Status
 
-Released and intentionally paused.
+## 0.2.5 — wait for physical USB removal
+- After the PowerShell safety engine returns success, the UI explicitly reports that the script ran successfully.
+- Captures the selected volume's physical disk PNP identity before ejection and watches for that physical device to disappear.
+- Keeps the UI open and blocks ordinary close/Exit while waiting for physical removal; closes when the device is no longer enumerated.
+- If physical identity cannot be captured, reports the limitation and leaves manual Exit available instead of pretending removal was detected.
+- Windows compilation and hardware testing are still required.
 
-The project is considered complete for its current purpose and has entered maintenance mode.
 
-### Testing Notes
-
-Repository structure and documented implementation were reviewed.
-
-The following were not verified during the continuity review:
-
-- Live USB-device behavior
-- Multiple Windows 10 and Windows 11 builds
-- Every USB hardware type
-- Every supported file system
-- Automated test coverage
-- Code signing
-
-Do not claim successful testing unless the relevant test was actually performed and recorded.
-
-## Unreleased
-
-No active development is currently planned.
-
-Future entries should be added only when the owner deliberately resumes development.
+## 0.2.6 — clear red/green status
+- Added a prominent red status panel for NOT READY / success not verified.
+- Added a prominent green status panel when the safety script returns exit code 0.
+- Green status explicitly means the script completed successfully; Windows' safe-removal notification remains the authority before unplugging.
+- Updated the footer guidance to explain the red/green states.
+- Source-only update; build and physical-device behavior still require Windows testing.

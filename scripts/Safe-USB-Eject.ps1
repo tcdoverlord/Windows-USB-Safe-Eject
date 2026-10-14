@@ -1,4 +1,9 @@
 #requires -Version 5.1
+param(
+    [string]$DriveLetter,
+    [switch]$GuiMode,
+    [switch]$ConfirmedByGui
+)
 <#+
 .SYNOPSIS
 Safely closes applications using a removable USB drive and requests Windows to eject it.
@@ -8,13 +13,34 @@ Safely closes applications using a removable USB drive and requests Windows to e
 2. Uses Windows Restart Manager to identify processes holding files on the selected drive.
 3. Attempts a graceful close first.
 4. Offers an optional force-close only when necessary.
-5. Requests a volume dismount and then invokes the Windows Shell eject action.
+5. Requests the normal Windows Shell eject action after the final lock check.
 
 The script will not intentionally stop Windows critical processes.
 +#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+if ($GuiMode) {
+    function Write-Host {
+        param(
+            [Parameter(Position=0, ValueFromRemainingArguments=$true)]
+            [object[]]$Object,
+            [ConsoleColor]$ForegroundColor
+        )
+        $message = (@($Object) | ForEach-Object { [string]$_ }) -join ' '
+        [Console]::Out.WriteLine("__SAFEUSB_LOG__" + $message)
+        [Console]::Out.Flush()
+    }
+    function Read-Host {
+        param([string]$Prompt)
+        [Console]::Out.WriteLine("__SAFEUSB_PROMPT__" + $Prompt)
+        [Console]::Out.Flush()
+        $answer = [Console]::In.ReadLine()
+        if ($null -eq $answer) { return '' }
+        return $answer
+    }
+}
 
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $LogDirectory = Join-Path $ProjectRoot 'logs'
@@ -262,7 +288,7 @@ function Invoke-ShellEject {
     $item.InvokeVerb('Eject')
 }
 
-Clear-Host
+if (-not $GuiMode) { Clear-Host }
 Write-Host '============================================================' -ForegroundColor Green
 Write-Host '               SAFE USB EJECT - TCDOVERLORD' -ForegroundColor Green
 Write-Host '============================================================' -ForegroundColor Green
@@ -275,31 +301,46 @@ try {
         exit 2
     }
 
-    Write-Host 'Detected removable drives:' -ForegroundColor Cyan
-    for ($i = 0; $i -lt $volumes.Count; $i++) {
-        $v = $volumes[$i]
-        Write-Host ("[{0}] {1}  {2}  {3} GB free of {4} GB  {5}" -f ($i + 1), $v.DriveLetter, $v.Label, $v.FreeGB, $v.SizeGB, $v.FileSystem)
-    }
+    $selected = $null
+    if (-not [string]::IsNullOrWhiteSpace($DriveLetter)) {
+        $normalizedDrive = $DriveLetter.Trim().TrimEnd('\')
+        if ($normalizedDrive.Length -eq 1) { $normalizedDrive += ':' }
+        $selected = $volumes | Where-Object { $_.DriveLetter -ieq $normalizedDrive } | Select-Object -First 1
+        if (-not $selected) {
+            Write-Log "The selected drive $normalizedDrive is no longer detected as removable. Refresh the list and try again." 'ERROR'
+            exit 3
+        }
+        Write-Host ("Selected from GUI: {0}  {1}  {2} GB free of {3} GB  {4}" -f $selected.DriveLetter, $selected.Label, $selected.FreeGB, $selected.SizeGB, $selected.FileSystem)
+    } else {
+        Write-Host 'Detected removable drives:' -ForegroundColor Cyan
+        for ($i = 0; $i -lt $volumes.Count; $i++) {
+            $v = $volumes[$i]
+            Write-Host ("[{0}] {1}  {2}  {3} GB free of {4} GB  {5}" -f ($i + 1), $v.DriveLetter, $v.Label, $v.FreeGB, $v.SizeGB, $v.FileSystem)
+        }
 
-    Write-Host
-    $selection = Read-Host 'Choose the USB drive number to eject'
-    $selectedIndex = 0
-    if (-not [int]::TryParse($selection, [ref]$selectedIndex) -or $selectedIndex -lt 1 -or $selectedIndex -gt $volumes.Count) {
-        Write-Log 'Invalid selection. Nothing was changed.' 'ERROR'
-        exit 3
+        Write-Host
+        $selection = Read-Host 'Choose the USB drive number to eject'
+        $selectedIndex = 0
+        if (-not [int]::TryParse($selection, [ref]$selectedIndex) -or $selectedIndex -lt 1 -or $selectedIndex -gt $volumes.Count) {
+            Write-Log 'Invalid selection. Nothing was changed.' 'ERROR'
+            exit 3
+        }
+        $selected = $volumes[$selectedIndex - 1]
     }
-
-    $selected = $volumes[$selectedIndex - 1]
     $driveLetter = $selected.DriveLetter
     $driveRoot = "$driveLetter\"
 
     Write-Log "Selected $driveLetter ($($selected.Label))."
-    Write-Host
-    Write-Host 'Close any open documents stored on this USB before continuing.' -ForegroundColor Yellow
-    $confirm = Read-Host "Type EJECT to continue with $driveLetter"
-    if ($confirm -cne 'EJECT') {
-        Write-Log 'Cancelled by user. Nothing was changed.' 'WARN'
-        exit 4
+    if ($GuiMode -and $ConfirmedByGui) {
+        Write-Log "Eject confirmation received in the GUI for $driveLetter."
+    } else {
+        Write-Host
+        Write-Host 'Close any open documents stored on this USB before continuing.' -ForegroundColor Yellow
+        $confirm = Read-Host "Type EJECT to continue with $driveLetter"
+        if ($confirm -ine 'EJECT') {
+            Write-Log 'Cancelled by user. Nothing was changed.' 'WARN'
+            exit 4
+        }
     }
 
     $locking = @(Get-LockingProcesses -DriveRoot $driveRoot)
@@ -319,7 +360,7 @@ try {
             $remaining | ForEach-Object { Write-Host (" - {0} (PID {1})" -f $_.Name, $_.Id) }
             Write-Host
             $force = Read-Host 'Type FORCE to close non-critical remaining processes, or press Enter to cancel'
-            if ($force -ceq 'FORCE') {
+            if ($force -ieq 'FORCE') {
                 Stop-RemainingProcesses -LockingProcesses $remaining
             } else {
                 Write-Log 'Eject cancelled because applications still have the USB open.' 'WARN'
@@ -336,29 +377,42 @@ try {
         exit 6
     }
 
-    Write-Log 'Requesting Windows to flush and dismount the volume.'
-    try {
-        $volume = Get-CimInstance Win32_Volume -Filter "DriveLetter = '$driveLetter'"
-        if ($volume) {
-            $result = Invoke-CimMethod -InputObject $volume -MethodName Dismount -Arguments @{ Force = $false; Permanent = $false }
-            if ($result.ReturnValue -ne 0) {
-                Write-Log "Windows returned dismount code $($result.ReturnValue); continuing with the normal Shell eject request." 'WARN'
+    Write-Log 'The application-lock check is best-effort; Windows remains the final authority on whether the device can be removed.' 'WARN'
+    Write-Log 'Requesting one normal Windows Shell eject. If Windows says the drive is in use, cancel that dialog, close the program or file using the drive, and retry.'
+    Invoke-ShellEject -DriveLetter $driveLetter
+
+    # Shell eject can complete asynchronously. Do not treat a short delay or a
+    # failed CIM query as success; wait up to 20 seconds for Windows to stop
+    # reporting the selected logical volume as mounted.
+    $timeoutSeconds = 20
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    $verifiedUnmount = $false
+    $lastQueryError = $null
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $currentVolume = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID = '$driveLetter'" -ErrorAction Stop
+            if (-not $currentVolume) {
+                $verifiedUnmount = $true
+                break
             }
+        } catch {
+            # A query error is not proof of ejection. Remember it and keep
+            # waiting; the timeout path below will report an unverified result.
+            $lastQueryError = $_.Exception.Message
         }
-    } catch {
-        Write-Log "The direct dismount step was unavailable: $($_.Exception.Message)" 'WARN'
+        Start-Sleep -Milliseconds 500
     }
 
-    Invoke-ShellEject -DriveLetter $driveLetter
-    Start-Sleep -Seconds 3
-
-    $stillMounted = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID = '$driveLetter'" -ErrorAction SilentlyContinue
-    if ($stillMounted) {
-        Write-Log 'Windows received the eject request, but the drive still appears mounted. Wait for the Windows notification before unplugging it.' 'WARN'
+    if (-not $verifiedUnmount) {
+        if ($lastQueryError) {
+            Write-Log "Eject outcome could not be verified after $timeoutSeconds seconds. Windows volume query error: $lastQueryError. Do not unplug unless Windows explicitly confirms safe removal." 'ERROR'
+        } else {
+            Write-Log "Windows did not confirm that $driveLetter was unmounted within $timeoutSeconds seconds. The eject outcome is unverified; do not unplug unless Windows explicitly confirms safe removal. Close open files and retry." 'ERROR'
+        }
         exit 7
     }
 
-    Write-Log "Windows safely ejected $driveLetter. It can now be removed." 'SUCCESS'
+    Write-Log "Windows no longer reports $driveLetter as a mounted logical volume. Safe-removal status verified." 'SUCCESS'
     exit 0
 }
 catch {

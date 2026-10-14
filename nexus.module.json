@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "module_id": "safeusb-eject-by-tcdoverlord",
+  "name": "SafeUSB Eject",
+  "platform": [
+    "windows"
+  ],
+  "project_type": "PowerShell",
+  "launcher": {
+    "type": "batch",
+    "path": "SAFE_USB_EJECT.bat"
+  },
+  "engine": {
+    "type": "powershell",
+    "path": "scripts/Safe-USB-Eject.ps1",
+    "minimum_version": "5.1"
+  },
+  "execution": {
+    "mode": "interactive",
+    "requires_terminal": true,
+    "working_directory": ".",
+    "timeout_seconds": 300
+  },
+  "safety": {
+    "requires_user_approval": true,
+    "destructive_operation": true,
+    "elevation": "optional",
+    "description": "Safely ejects a removable USB drive after lock detection, graceful close attempts, final lock verification, dismount, and Windows Shell eject."
+  },
+  "outputs": {
+    "exit_code": true,
+    "stdout": true,
+    "stderr": true,
+    "log_directory": "logs"
+  }
+}

@@ -1,0 +1,289 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>Safe USB Eject by TCDOVERLORD</title>
+  <meta name="description" content="Safe USB Eject is a Windows utility designed to make USB drive removal easier and safer.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d17;
+      --panel: #111a2b;
+      --panel-soft: #0d1524;
+      --line: #263650;
+      --text: #edf4ff;
+      --muted: #a6b5cc;
+      --blue: #58a6ff;
+      --blue-bright: #7bc0ff;
+      --green: #55d6a0;
+      --radius: 18px;
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at top, rgba(44, 104, 190, .18), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--blue-bright); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(var(--max), calc(100% - 36px)); margin-inline: auto; }
+    .hero { padding: 54px 0 34px; text-align: center; }
+    .logo-placeholder {
+      width: 108px; height: 108px; margin: 0 auto 18px; border-radius: 26px;
+      border: 1px dashed #4b77ac; background: linear-gradient(145deg, #172d4b, #0c1423);
+      display: grid; place-items: center; color: var(--blue-bright);
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
+    }
+    .logo-placeholder svg { width: 54px; height: 54px; }
+    .eyebrow { color: var(--blue-bright); text-transform: uppercase; letter-spacing: .16em; font-size: .76rem; font-weight: 800; }
+    h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1.08; margin: 10px 0 12px; letter-spacing: -.045em; }
+    .byline { color: var(--muted); margin: 0 0 18px; }
+    .tagline { font-size: clamp(1rem, 2vw, 1.2rem); max-width: 720px; margin: 0 auto 22px; color: #d4e2f6; }
+    .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 22px 0 24px; }
+    .badge { border: 1px solid #314866; background: #111e31; padding: 5px 11px; border-radius: 999px; color: #dbeaff; font-size: .82rem; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 17px; border: 1px solid #3c5a7d; border-radius: 11px; font-weight: 750; }
+    .button.primary { color: #07111f; background: var(--blue-bright); border-color: var(--blue-bright); }
+    .button.secondary { color: var(--text); background: #101b2c; }
+    main { padding-bottom: 36px; }
+    section { margin: 22px 0; padding: clamp(20px, 4vw, 34px); background: rgba(17, 26, 43, .88); border: 1px solid var(--line); border-radius: var(--radius); }
+    h2 { margin: 0 0 16px; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.025em; }
+    h3 { margin: 0 0 8px; font-size: 1.08rem; }
+    p { margin: 0 0 13px; }
+    .muted { color: var(--muted); }
+    .demo-frame { padding: 10px; background: #080d16; border: 1px solid #293b56; border-radius: 14px; }
+    .demo-frame img { display: block; width: 100%; max-height: 680px; object-fit: contain; border-radius: 8px; }
+    .placeholder {
+      min-height: 150px; display: grid; place-items: center; text-align: center; padding: 20px;
+      border: 1px dashed #4a6789; border-radius: 13px;
+      background: repeating-linear-gradient(135deg, rgba(88,166,255,.055), rgba(88,166,255,.055) 10px, transparent 10px, transparent 20px), #0b1423;
+      color: #b7cbe5;
+    }
+    .placeholder strong { display: block; color: #e6f1ff; margin-bottom: 5px; }
+    .placeholder small { display: block; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .feature { background: var(--panel-soft); border: 1px solid #263750; border-radius: 13px; padding: 18px; }
+    .feature .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .feature p { color: var(--muted); font-size: .94rem; margin: 0; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; counter-reset: step; }
+    .step { padding: 16px; background: var(--panel-soft); border: 1px solid #263750; border-radius: 12px; }
+    .step::before { counter-increment: step; content: "0" counter(step); display: block; color: var(--blue-bright); font-size: .82rem; font-weight: 900; letter-spacing: .1em; margin-bottom: 7px; }
+    .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .download-card { padding: 18px; background: var(--panel-soft); border: 1px solid #263750; border-radius: 13px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    pre { overflow-x: auto; padding: 16px; border-radius: 12px; border: 1px solid #263750; background: #080d16; color: #d6e5fa; font-size: .9rem; }
+    .notice { border-left: 4px solid #e6b85c; background: rgba(230,184,92,.08); padding: 14px 16px; border-radius: 0 10px 10px 0; color: #f1e4c6; }
+    .affiliate { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; background: linear-gradient(110deg, rgba(31,76,129,.3), rgba(17,26,43,.9)); }
+    .affiliate p { color: var(--muted); margin: 0; }
+    .chart-placeholder { min-height: 180px; }
+    footer { text-align: center; padding: 12px 0 42px; color: var(--muted); font-size: .9rem; }
+    @media (max-width: 760px) {
+      .grid, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .download-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: min(100% - 22px, var(--max)); }
+      .hero { padding-top: 34px; }
+      .grid, .steps { grid-template-columns: 1fr; }
+      section { padding: 19px; }
+      .actions .button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero wrap">
+    <!-- IMAGE PLACEHOLDER: Replace this icon block with your logo when ready. -->
+    <div class="logo-placeholder" aria-label="Logo placeholder">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M24 8h16v17h8L32 41 16 25h8V8Z" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/>
+        <path d="M14 38v10a6 6 0 0 0 6 6h24a6 6 0 0 0 6-6V38" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="m25 47 5 5 10-11" stroke="#55d6a0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Windows Utility Â· TCDOVERLORD</div>
+    <h1>Safe USB Eject</h1>
+    <p class="byline">by <a href="https://github.com/tcdoverlord">TCDOVERLORD</a></p>
+    <p class="tagline">Find USB drive locks Â· Close safely Â· Verify Â· Eject</p>
+    <p class="muted">A Windows utility designed to make USB drive removal easier and safer.</p>
+    <div class="badges" aria-label="Project badges">
+      <span class="badge">Windows</span><span class="badge">Rust interface</span>
+      <span class="badge">PowerShell safety engine</span><span class="badge">Open source</span>
+    </div>
+    <div class="actions">
+      <a class="button primary" href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject">View on GitHub â†—</a>
+      <a class="button secondary" href="#demo">Watch the demo â†“</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="demo">
+      <h2>ðŸŽ¬ See It in Action</h2>
+      <p class="muted">The animated demonstration below uses your existing GIF file. Keep this HTML file in the project root so the relative asset path works.</p>
+      <div class="demo-frame">
+        <img src="assets/vids/usbsafeject_gif_video.gif" alt="Animated demonstration of Safe USB Eject" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+        <div class="placeholder" style="display:none">
+          <div><strong>GIF preview placeholder</strong><small>Expected file: assets/vids/usbsafeject_gif_video.gif</small><small>Check the file path and keep this HTML in the repository root.</small></div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px;font-size:.88rem">Actual project demo Â· <code>assets/vids/usbsafeject_gif_video.gif</code></p>
+    </section>
+
+    <section>
+      <h2>âœ¨ Features</h2>
+      <div class="grid">
+        <article class="feature"><div class="icon">ðŸ”Œ</div><h3>USB drive selection</h3><p>Select the drive you want to remove.</p></article>
+        <article class="feature"><div class="icon">ðŸ›¡ï¸</div><h3>Guided eject workflow</h3><p>Follow the application's safe-removal process.</p></article>
+        <article class="feature"><div class="icon">ðŸ–¥ï¸</div><h3>Rust interface</h3><p>A dedicated graphical interface for the workflow.</p></article>
+        <article class="feature"><div class="icon">âš™ï¸</div><h3>PowerShell engine</h3><p>Uses the project's PowerShell script for eject operations.</p></article>
+        <article class="feature"><div class="icon">ðŸ“£</div><h3>Status feedback</h3><p>Clear status information while the workflow runs.</p></article>
+        <article class="feature"><div class="icon">ðŸ“¦</div><h3>Packaged build</h3><p>Includes an executable and its companion script.</p></article>
+      </div>
+      <p class="muted" style="margin-top:14px;font-size:.9rem">Confirm each feature against the build you're publishing before calling it production-ready.</p>
+    </section>
+
+    <section>
+      <h2>ðŸ”„ How It Works</h2>
+      <div class="steps">
+        <div class="step"><strong>Detect</strong><p class="muted">Find the available USB drives.</p></div>
+        <div class="step"><strong>Select</strong><p class="muted">Choose the drive you want to eject.</p></div>
+        <div class="step"><strong>Confirm</strong><p class="muted">Confirm the requested operation.</p></div>
+        <div class="step"><strong>Run safety workflow</strong><p class="muted">Allow the eject operation to run.</p></div>
+        <div class="step"><strong>Check status</strong><p class="muted">Follow the status shown by Windows and the app.</p></div>
+        <div class="step"><strong>Remove safely</strong><p class="muted">Disconnect only when it is safe to do so.</p></div>
+      </div>
+      <div class="demo-frame" style="margin-top:14px">
+        <img
+          src="assets/imgs/SafeUSBEjectWorkflowGuide.jpg"
+          alt="Safe USB Eject workflow guide: detect USB drives, select a drive, close and verify, eject safely, and confirm completion"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
+        >
+        <div class="placeholder" style="display:none">
+          <div><strong>Workflow graphic not found</strong><small>Expected file: assets/imgs/SafeUSBEjectWorkflowGuide.jpg</small><small>Keep the assets folder beside index.html.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="getting-started">
+      <h2>ðŸš€ Getting Started</h2>
+      <div class="download-grid">
+        <div class="download-card">
+          <h3>Option 1 Â· Prebuilt executable</h3>
+          <p class="muted">Browse the published build files in the repository.</p>
+          <p><a href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject/tree/main/dist">Open the dist folder â†—</a></p>
+          <ul>
+            <li><a href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject/blob/main/dist/SafeUSB-Eject.exe">SafeUSB-Eject.exe</a></li>
+            <li><a href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject/blob/main/dist/scripts/Safe-USB-Eject.ps1">Safe-USB-Eject.ps1</a></li>
+          </ul>
+          <div class="notice"><strong>Important:</strong> Keep the companion PowerShell script in the expected location relative to the executable. The EXE should not be assumed to be standalone.</div>
+        </div>
+        <div class="download-card">
+          <h3>Option 2 Â· Build from source</h3>
+          <p class="muted">Requirements: Windows, Rust/Cargo, and PowerShell.</p>
+          <pre><code>git clone https://github.com/tcdoverlord/Windows-USB-Safe-Eject.git
+cd Windows-USB-Safe-Eject</code></pre>
+          <p>See <a href="BUILD-EXE.bat">BUILD-EXE.bat</a> and the project documentation for build instructions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>ðŸ›¡ï¸ Safety Notes</h2>
+      <ul>
+        <li>Close files and applications that may be using the USB drive.</li>
+        <li>Do not disconnect the drive if Windows reports that it is still in use.</li>
+        <li>If ejecting fails, follow the app's status message and resolve the issue before retrying.</li>
+        <li>A completion indicator is not proof of physical removal or data integrity.</li>
+      </ul>
+      <p>Read the project <a href="docs/SAFETY.md">safety documentation</a> before use.</p>
+    </section>
+
+    <section>
+      <h2>ðŸ“ Project Structure</h2>
+      <pre><code>Windows-USB-Safe-Eject/
+â”œâ”€â”€ assets/
+â”‚   â”œâ”€â”€ imgs/                 # Image assets and future graphics
+â”‚   â””â”€â”€ vids/
+â”‚       â””â”€â”€ usbsafeject_gif_video.gif
+â”œâ”€â”€ dist/
+â”‚   â”œâ”€â”€ SafeUSB-Eject.exe
+â”‚   â””â”€â”€ scripts/
+â”‚       â””â”€â”€ Safe-USB-Eject.ps1
+â”œâ”€â”€ docs/
+â”œâ”€â”€ legacy/
+â”œâ”€â”€ scripts/
+â”œâ”€â”€ src/
+â”œâ”€â”€ BUILD-EXE.bat
+â”œâ”€â”€ Cargo.toml
+â”œâ”€â”€ LICENSE
+â””â”€â”€ README.md</code></pre>
+    </section>
+
+    <section>
+      <h2>ðŸ’™ Recommended Gear & Support</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        <article class="download-card">
+          <div class="icon" aria-hidden="true">ðŸ’¾</div>
+          <h3>Recommended USB Drive</h3>
+          <p class="muted">I use these USB drives myself and have found them fast and reliable for everyday storage. Check the product details to make sure it suits your needs.</p>
+          <p style="margin-top:16px">
+            <a class="button primary" href="https://amzn.to/4B27MiJ" target="_blank" rel="noopener noreferrer sponsored">View USB Drive on Amazon â†—</a>
+          </p>
+        </article>
+        <article class="download-card">
+          <div class="icon" aria-hidden="true">ðŸ›ï¸</div>
+          <h3>Another Recommended Item</h3>
+          <p class="muted">Here's another item I recommend for needs beyond USB storage. Open the link to see the product details.</p>
+          <p style="margin-top:16px">
+            <a class="button primary" href="https://amzn.to/4zvDVxm" target="_blank" rel="noopener noreferrer sponsored">View Recommendation on Amazon â†—</a>
+          </p>
+        </article>
+      </div>
+      <p class="muted" style="font-size:.88rem;margin-top:14px"><strong>Affiliate disclosure:</strong> These are affiliate links. I may earn a commission from qualifying purchases made through them, at no additional cost to you.</p>
+    </section>
+
+    <section>
+      <h2>ðŸ› Issues & Contributions</h2>
+      <p>Found a bug or have an improvement to suggest?</p>
+      <p><a class="button secondary" href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject/issues">Open an issue on GitHub â†—</a></p>
+      <p class="muted">When reporting a problem, include your Windows version, app version or commit, USB device type, and any relevant error message. Do not include private information.</p>
+    </section>
+
+    <section>
+      <h2>ðŸ“œ License</h2>
+      <p>See the <a href="LICENSE">LICENSE</a> file for the applicable license and terms.</p>
+    </section>
+
+    <section>
+      <h2>â­ Star History</h2>
+      <div class="chart-placeholder">
+        <a href="https://star-history.com/#tcdoverlord/Windows-USB-Safe-Eject&Date" target="_blank" rel="noopener noreferrer">
+          <img
+            src="https://api.star-history.com/svg?repos=tcdoverlord/Windows-USB-Safe-Eject&type=Date"
+            alt="Star History chart for Windows USB Safe Eject"
+            style="display:block;width:100%;max-width:760px;margin:auto"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
+          >
+          <div class="placeholder" style="display:none">
+            <div><strong>Star History chart placeholder</strong><small>The chart loads from Star History when internet access is available.</small></div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p>Made with care by <a href="https://github.com/tcdoverlord">TCDOVERLORD</a>.</p>
+    <p>Use safe-removal procedures and verify the status shown by Windows before disconnecting a drive.</p>
+    <p><a href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject">GitHub Repository</a> Â· <a href="https://github.com/tcdoverlord/Windows-USB-Safe-Eject/issues">Issues</a></p>
+  </footer>
+</body>
+</html>
+

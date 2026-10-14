@@ -1,304 +1,73 @@
-# 💾 SafeUSB-Eject-Windows11
+# Safe USB Eject — Rust UI Preview
 
-> A safety-first Windows utility that detects applications holding a removable USB drive open, closes them carefully, verifies the drive is unlocked, and asks Windows to eject it safely.
+**Owner:** TCDOVERLORD  
+**Stable baseline:** PowerShell v1.0.0, intentionally preserved  
+**Rust UI preview:** v0.2.0  
+**Status:** Source package; not compiled or tested on Windows in this environment.
 
-![SafeUSB-Eject-Windows11 Hero](images/SafeUSB_Eject_for_Windows_11_hero.png)
+## Why this rebuild exists
 
-## Technology Cards
-
-![Batch](https://img.shields.io/badge/Launcher-Batch-4D4D4D?style=for-the-badge)
-![PowerShell](https://img.shields.io/badge/Engine-PowerShell_5.1+-5391FE?style=for-the-badge&logo=powershell)
-![Windows](https://img.shields.io/badge/Platform-Windows_10%20%7C%2011-0078D4?style=for-the-badge&logo=windows)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-## Overview
-
-Windows sometimes reports that a USB device is still in use even when every visible window appears closed.
-
-SafeUSB-Eject-Windows11 uses the Windows Restart Manager API to identify processes holding files or folders open on the selected USB drive. It first requests a graceful application close, scans the drive again, and only offers force-close when locks remain.
-
-Before requesting removal, the utility verifies that the drive is no longer locked, requests a volume dismount, invokes the normal Windows eject action, and records the result in a dated log file.
+The previous GUI versions became unreliable after changes to process callbacks and synchronous drive scans. This project replaces the GUI with a Rust/egui desktop application. Drive discovery runs in background threads, so a slow Windows USB mount query should not freeze the interface. The existing safety engine is retained for its Restart Manager lock checks and safe-eject flow instead of reimplementing safety-critical behavior untested.
 
 ## Features
 
-- Automatically detects removable USB drives.
-- Displays the drive letter, label, file system, size, and free space.
-- Identifies locking processes through Windows Restart Manager.
-- Requests graceful application closure before offering force-close.
-- Refuses to force-stop protected or critical Windows processes.
-- Re-scans the selected USB drive before attempting removal.
-- Requests a safe volume dismount.
-- Uses the standard Windows Shell eject action.
-- Writes dated activity logs to the `logs/` folder.
-- Requires the user to type `EJECT` before continuing.
-- Requires the user to type `FORCE` before force-closing an application.
-- Stops the eject process when active locks remain.
+- Native desktop window with a drive list, selection, status and activity log.
+- Background removable-drive scanning on startup, manual refresh, and every three seconds.
+- Drive scanning does not run on the GUI thread.
+- GUI confirmation before the safety engine is started.
+- Safety engine runs without opening a console window.
+- Engine prompts are relayed into the GUI, including the optional force-close decision.
+- Normal window-close requests are deferred while an eject operation is in progress.
+- Graceful close is attempted before force-close is offered; critical Windows processes remain protected.
+- The engine rechecks locks and stops if locks remain.
+- Logs are retained under `logs/` relative to the project/engine directory.
+- The stable original PowerShell engine is included as `legacy/Safe-USB-Eject-v1.0.0.ps1`.
 
-## Screenshots
-![Drive Selection](images/drive-selection.png)
+## Build on Windows
 
-![Locking Processes](images/locking-processes.png)
+1. Install Rust using [rustup.rs](https://rustup.rs/). Choose the stable toolchain and reopen your terminal.
+2. Extract this folder to a normal local directory.
+3. Double-click `BUILD-EXE.bat`, or run `cargo build --release`.
+4. The launcher and script are copied to `dist/`.
+5. Run `dist\SafeUSB-Eject.exe`.
 
-![Safe Eject Success](images/safe-eject-success.png)
+The first Cargo build downloads dependencies from crates.io and requires internet access. Subsequent builds use the local Cargo cache.
 
-## Architecture
+## Safety notes
 
-```mermaid
-flowchart TD
-    A[SAFE_USB_EJECT.bat] --> B[Safe-USB-Eject.ps1]
-    B --> C[Detect removable USB volumes]
-    C --> D[Display available drives]
-    D --> E[User selects USB drive]
-    E --> F[Require EJECT confirmation]
-    F --> G[Restart Manager lock scan]
-    G --> H{Locking processes found?}
-    H -- No --> M[Verify drive is unlocked]
-    H -- Yes --> I[Request graceful application close]
-    I --> J[Re-scan selected USB drive]
-    J --> K{Locks remain?}
-    K -- No --> M
-    K -- Yes --> L[Optional FORCE close]
-    L --> M
-    M --> N{Drive unlocked?}
-    N -- No --> O[Cancel eject and write log]
-    N -- Yes --> P[Request volume dismount]
-    P --> Q[Invoke Windows Shell eject]
-    Q --> R[Verify removal]
-    R --> S[Write final result to log]
-```
-![Architecture](images/USB_eject_utility_project_poster.png)
+- The GUI selection is not a guarantee that the drive is still present; the engine revalidates the selected drive before acting.
+- Restart Manager detection is best-effort. Windows can still report the drive is in use.
+- If Windows blocks the eject, cancel its warning, close programs and files using the drive, and retry. Do not force through a warning when you are unsure whether writes are pending.
+- Force-close is optional and requires a separate GUI decision after a graceful-close attempt and lock recheck.
+- The app does not claim ejection success solely because a Shell eject request was sent. The engine verifies that Windows no longer reports the volume as mounted.
+- The EXE is unsigned; Windows SmartScreen may warn.
+- Do not use this preview on a drive containing your only copy of important data until it passes the QA checklist.
 
-## Execution Pipeline
+## Why this is a hybrid for now
 
-```text
-Launch SAFE_USB_EJECT.bat
-            ↓
-Start PowerShell safety engine
-            ↓
-Detect removable USB drives
-            ↓
-Display drive information
-            ↓
-Select the USB drive
-            ↓
-Type EJECT to confirm
-            ↓
-Scan for locking processes
-            ↓
-Request graceful application close
-            ↓
-Re-scan for remaining locks
-            ↓
-Optional FORCE close
-            ↓
-Perform final lock verification
-            ↓
-Request volume dismount
-            ↓
-Invoke Windows eject action
-            ↓
-Verify removal
-            ↓
-Write result to dated log
-```
+The GUI and background workflow are Rust. The known safety engine remains PowerShell temporarily so the move to Rust does not simultaneously replace the previously working lock-detection/eject logic. Once this preview passes Windows QA, the engine can be ported in a separate change with its own safety tests.
 
-## Project Tree
+## Repository layout
 
-```text
-SafeUSB-Eject-Windows11/
-├── .gitignore
-├── LICENSE
-├── README.md
-├── SAFE_USB_EJECT.bat
-│
-├── docs/
-│   └── SAFETY.md
-│
-├── images/
-│   ├── SafeUSB_Eject_for_Windows_11_hero.png
-│   ├── drive-selection.png
-│   ├── locking-processes.png
-│   └── safe-eject-success.png
-│
-├── logs/
-│
-└── scripts/
-    └── Safe-USB-Eject.ps1
-```
+- `src/main.rs` — Rust GUI, background drive scan, child-process supervision.
+- `scripts/Safe-USB-Eject.ps1` — adapted safety engine with a GUI communication protocol.
+- `legacy/Safe-USB-Eject-v1.0.0.ps1` — preserved baseline engine.
+- `docs/SAFETY.md` — safety behavior and limitations.
+- `TEST-CHECKLIST.md` — manual Windows validation.
 
-> The screenshot files are optional and may not exist until screenshots are added.
 
-## Installation
+### Window-close recovery (0.2.3)
+If the safety helper has not reported completion, the app explains that the result is unverified and offers **Keep Waiting** or **Close UI Anyway…**. Closing the UI this way is not confirmation that the USB was safely ejected.
 
-### Download the repository
 
-Download the latest repository ZIP from GitHub and extract it to a permanent folder.
+### One-eject test behavior (v0.2.4)
+After the safety engine reports exit code 0, the app displays “Eject completed successfully. Exiting app…” for about two seconds and closes automatically. It will not scan or start another eject after a successful operation. Failed or unverifiable operations remain visible for review.
 
-Keep the included folder structure unchanged.
 
-### Clone with Git
+## Physical removal confirmation (v0.2.5)
+After the safety engine returns success, the app displays **SCRIPT RAN SUCCESSFULLY** and waits for the same physical USB disk to disappear from Windows device enumeration. The window closes after physical removal is detected. While waiting, the normal Exit button and window close are blocked. If the physical device identity cannot be determined, the app explains that automatic removal detection is unavailable and allows manual exit. Windows' safe-removal notification remains the final authority; do not unplug unless Windows confirms safe removal.
 
-```powershell
-git clone https://github.com/tcdoverlord/SafeUSB-Eject-Windows11.git
-cd SafeUSB-Eject-Windows11
-```
 
-### Run the utility
-
-Double-click:
-
-```text
-SAFE_USB_EJECT.bat
-```
-
-Administrative rights are not normally required. However, some application closures or volume dismount operations may require an elevated Windows session.
-
-## Quick Start
-
-1. Connect the removable USB drive.
-2. Close any documents you know are open from the USB drive.
-3. Double-click `SAFE_USB_EJECT.bat`.
-4. Select the correct USB drive number.
-5. Type `EJECT` when prompted.
-6. Review any locking applications that are detected.
-7. Allow the utility to request a graceful close.
-8. Type `FORCE` only when you accept the risk of losing unsaved work.
-9. Wait for Windows to confirm removal or for the drive to disappear from File Explorer.
-10. Unplug the USB drive only after removal has been confirmed.
-
-## Safety Warning
-
-Force-closing an application can cause unsaved work to be lost.
-
-The utility attempts a graceful close first and refuses to force-stop known critical Windows processes. However, users should still save their work before running the utility.
-
-Do not unplug a USB drive while files are being copied, written, repaired, encrypted, formatted, or synchronized.
-
-See [docs/SAFETY.md](docs/SAFETY.md) for additional safety information.
-
-## Logs
-
-The utility writes dated log files to:
-
-```text
-logs/
-```
-
-Logs may include:
-
-- Selected drive information
-- Detected locking processes
-- Graceful-close requests
-- Force-close requests
-- Lock verification results
-- Dismount attempts
-- Eject results
-- Errors and cancellation messages
-
-Do not post logs publicly without reviewing them for private filenames or folder paths.
-
-## Roadmap
-
-- [ ] Add an optional graphical interface.
-- [ ] Add a Windows system tray launcher.
-- [ ] Display USB device model and serial information.
-- [ ] Add a configurable protected-process list.
-- [ ] Add optional Sysinternals Handle integration.
-- [ ] Add improved USB device removal verification.
-- [ ] Add digitally signed PowerShell releases.
-- [ ] Create a packaged Windows executable.
-- [ ] Publish automated GitHub releases.
-
-## Version History
-
-### v1.0.0
-
-- Initial safety-first release.
-- Added automatic removable-drive detection.
-- Added USB drive selection and confirmation.
-- Added Windows Restart Manager lock detection.
-- Added graceful process-close requests.
-- Added optional forced process closure.
-- Added protected-process safety checks.
-- Added final lock verification.
-- Added volume dismount and Windows eject requests.
-- Added dated activity logging.
-
-# License
-
-This project is licensed under the **TCDOVERLORD Personal Learning License (TPLL) v1.0**.
-
-This project is intended to support:
-
-- 📚 Personal learning
-- 🎓 Educational use
-- 🧪 Research and experimentation
-- 💻 Private, non-commercial projects
-
-You are welcome to study, modify, and experiment with the source code for your own personal or educational purposes.
-
-Commercial use—including resale, redistribution, business integration, SaaS offerings, consulting use, enterprise deployment, or inclusion in commercial products—is **not permitted** without prior written permission from the copyright owner.
-
-For commercial licensing inquiries, please contact:
-
-**TCDOVERLORD**
-
-GitHub: https://github.com/tcdoverlord
-
-See the [LICENSE](LICENSE) file for the complete license terms.
-
-## Author
-
-**TCDOVERLORD**
-
-GitHub: https://github.com/tcdoverlord
-
-Building practical Windows utilities, automation tools, diagnostic scripts, and open-source learning projects.
-
-## Support
-
-Open a GitHub issue when reporting a problem.
-
-Include:
-
-- Your Windows version
-- The USB drive letter
-- The USB file system
-- The displayed locking process
-- What happened after typing `EJECT`
-- Whether `FORCE` was used
-- Relevant entries from the matching file in `logs/`
-
-Before sharing a log, remove any private filenames, usernames, or folder paths.
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/chart?repos=tcdoverlord/SafeUSB-Eject-Windows11%2CSafeUSB-Eject-by-TCDOVERLORD/SafeUSB-Eject-by-TCDOVERLORD&type=date&legend=top-left&sealed_token=-MT_bnRdYX5Oxwtia6Uht7yVAXd0-Powf068uyFGlTVy6DB4_7HdijXk1GJu8ZOTNcqkEBa6E3Ffxfqp4Dylokm809agwUZzaHfQ8HmHs5AAzDQMdh8BgG0mRR22quK4XYqUxemSpxUVp1Vfvkf_av0U2G8uMgmRhIXvqpKpHzEfdfR-0q7ePTNxatqV)](https://www.star-history.com/?repos=tcdoverlord%2FSafeUSB-Eject-Windows11%2CSafeUSB-Eject-by-TCDOVERLORD%2FSafeUSB-Eject-by-TCDOVERLORD&type=date&legend=top-left)
-
-## Golden Rule
-
-```text
-Build
- ↓
-Test
- ↓
-Document
- ↓
-git status
- ↓
-git add .
- ↓
-git status
- ↓
-git commit
- ↓
-git push
- ↓
-Verify
- ↓
-Release
-```
-
----
-
-If SafeUSB-Eject-Windows11 helped you safely remove a stubborn USB drive, consider giving the repository a ⭐.
+### Red/green status indicator (v0.2.6)
+- **Red — NOT READY / SUCCESS NOT VERIFIED:** the script is still running, failed, or has not returned a verified success code.
+- **Green — SCRIPT SUCCESSFULLY COMPLETED:** the safety script returned exit code 0. This confirms script success, not a guarantee that the physical device has been removed; follow Windows' safe-removal notification before unplugging.
